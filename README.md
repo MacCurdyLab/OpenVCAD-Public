@@ -1,4 +1,4 @@
-![Simple VCAD Object Example](documentation/open_vcad_text.png)
+![Simple VCAD Object Example](documentation/vcad_gyroid_text.png)
 
 DOI: [10.1016/j.addma.2023.103912](https://doi.org/10.1016/j.addma.2023.103912)
 
