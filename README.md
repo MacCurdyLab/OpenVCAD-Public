@@ -17,6 +17,24 @@ With OpenVCAD, you can:
 
 ---
 
+## 🖼 Gallery
+
+Here are a few examples of what OpenVCAD can produce:
+
+### Functionally graded lattice
+![Example 1 – Functionally graded lattice](images/lattice_example.png)  
+*Multi-material graded lattice structure made with soft, rigid, and non-curing liquid.*
+
+###  Multi-material Stanford Bunny
+![Example 2 – Multi-material stanford bunny](images/bunny_combined.png)  
+*(a) OpenVCAD software render of the multi-material lattice-filled Stanford Bunny; (b) physical artifact printed on a Stratasys J750 printer; and (c) close-up view detailing graded internal lattice structures. Strut color is a function of strut length. The bunny is comprised of 3,289 unique struts.*
+
+### Inkjet 3D Printed Medical Scan
+![Example 3 – Inkjet 3D Printed Medical Scan](images/medical.png)  
+*Real world patient scan ata processed with OpenVCAD and printed on Inkjet 3D Printer*
+
+---
+
 ## 📚 Publications
 
 OpenVCAD is an active research project developed by the [Matter Assembly Computation Lab](https://www.colorado.edu/lab/matterassembly/) at CU Boulder.
@@ -29,11 +47,53 @@ OpenVCAD is an active research project developed by the [Matter Assembly Computa
 
 ---
 
+## How OpenVCAD Works
+
+1. **Modeling** – Use the `pyvcad` Python package to create a hierarchical tree of geometry + material nodes.
+2. **Compilation** – Run an OpenVCAD compiler module to convert the model into volumetric data.
+3. **Export** – Output formats include PNG stacks for inkjet printing, FEA meshes for simulation, and meshes for FFF printing.
+
+Key capabilities:
+
+- **Material transitions** – Gradual changes in material properties within one object.
+- **Fully implicit representation** – Geometry *and* material are expressed implicitly, scaling to hundreds of billions of voxels.
+- **Digital alloying** – Combine materials at a fine scale for intricate compositions.
+- **Blending** – Convolution-based smoothing across complex material interfaces.
+- **Image-based processing** – Drive material distributions from images (e.g., medical scans).
+
+---
+
+## Supported Inputs
+
+| **Category** | **Supported Inputs** |
+|--------------|----------------------|
+| **Geometry** | • Meshes  <br>• STEP CAD files  <br>• FEA simulation results  <br>• DICOM medical scans  <br>• Implicit surfaces  <br>• Voxels (OpenVDB, NanoVDB) |
+| **Materials**| • Math expressions  <br>• Custom C++ / Python functions  <br>• Blending  <br>• DICOM medical scans  <br>• Voxels (OpenVDB, NanoVDB) |
+
+---
+
+## Supported Outputs
+
+| **Category**          | **Output Types** |
+|-----------------------|------------------|
+| **3D Printing**       | PNG stacks (inkjet) |
+| **Simulation**        | FEA input files with material assignments (ABAQUS) |
+| **Voxel-based Outputs**| Voxel grids (OpenVDB, NanoVDB) |
+| **Visualization**     | Surface and volumetric previews |
+
+---
+
+## What OpenVCAD **Is Not**
+
+OpenVCAD is **not** a voxel-by-voxel design tool. While it can emit voxel data, design is done implicitly with high-level math expressions that scale to extremely large builds (e.g. Inkjet 3D printing).
+
+---
+
 ## 🛠 Installation
 OpenVCAD can be used in two main ways:
 
 ### 1. **OpenVCAD Studio** (GUI IDE)
-> Best place to start
+> [Read our install guide](https://github.com/MacCurdyLab/OpenVCAD-Public/wiki/Installing-OpenVCAD-Studio)
 - A standalone IDE for creating, previewing, and exporting designs with `pyvcad`.
 - Ships with `pyvcad` built-in — no separate Python install needed.
 - Available for **Windows** and **macOS (Apple Silicon)**.
@@ -57,24 +117,6 @@ The OpenVCAD source code is open-source under a **non-commercial license**.
 You can request access to the private GitHub repository here:
 
 ➡ **[Request Access Form](https://forms.gle/MAjCmG66xZ6p1JcE9)**
-
----
-
-## 🖼 Gallery
-
-Here are a few examples of what OpenVCAD can produce:
-
-### Functionally graded lattice
-![Example 1 – Functionally graded lattice](images/lattice_example.png)  
-*Multi-material graded lattice structure made with soft, rigid, and non-curing liquid.*
-
-###  Multi-material Stanford Bunny
-![Example 2 – Multi-material stanford bunny](images/bunny_combined.png)  
-*(a) OpenVCAD software render of the multi-material lattice-filled Stanford Bunny; (b) physical artifact printed on a Stratasys J750 printer; and (c) close-up view detailing graded internal lattice structures. Strut color is a function of strut length. The bunny is comprised of 3,289 unique struts. *
-
-### Inkjet 3D Printed Medical Scan
-![Example 3 – Inkjet 3D Printed Medical Scan](images/medical.png)  
-*Real world patient scan ata processed with OpenVCAD and printed on Inkjet 3D Printer*
 
 ---
 
