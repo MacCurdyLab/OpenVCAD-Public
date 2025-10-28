@@ -37,14 +37,18 @@ Here are a few examples of what OpenVCAD can produce:
 
 ## 📚 Publications
 
-OpenVCAD is an active research project developed by the [Matter Assembly Computation Lab](https://www.colorado.edu/lab/matterassembly/) at CU Boulder.
+OpenVCAD is an active research project developed by the [Matter Assembly Computation Lab](https://www.colorado.edu/lab/matterassembly/) at CU Boulder. 
+1. **OpenVCAD: An open‑source volumetric multi‑material geometry compiler** (2024)  
+    <small>Core framework; implicit volumetric design; inkjet/PolyJet workflows.</small><br>
+    [Read our paper here](https://matterassembly.org/publications/#wade2024openvcad) (Additive Manufacturing)
 
-1. **Wade et al., 2024** — [OpenVCAD: An open source volumetric multi-material geometry compiler](https://matterassembly.org/assets/pdf/preprints/2024_OpenVCAD.pdf)  
-   *Introduces the original OpenVCAD framework for implicit, volumetric multi-material design, with a focus on inkjet 3D printing.*
+2. **Implicit Toolpath Generation for Functionally Graded Additive Manufacturing via Gradient‑Aware Slicing** (2025)  
+    <small>Extends VCAD to toolpath‑based systems (e.g., FFF) with gradient‑aware slicing.</small><br>
+    [Read our paper here](https://matterassembly.org/publications/#wade2025implicit) (Additive Manufacturing)
 
-2. **Wade et al., 2025** — [Implicit Toolpath Generation for Functionally Graded Additive Manufacturing via Implicit Modeling](https://arxiv.org/abs/2505.08093) *(preprint)*  
-   *Extends OpenVCAD to toolpath-based 3D printing systems with gradient-aware slicing methods for filament mixing and process parameter grading.*
-
+3. **Implicit Modeling for 3D‑Printed Multi‑Material Computational Object Design via Python** (2025)  
+    <small>Python‑first API (`pyvcad`), enhanced lattice workflows, and simulation‑informed design/export.</small><br>
+    [Read our paper here](https://matterassembly.org/publications/#wade2025pyvcad) (Proceedings of the 10th ACM Symposium on Computational Fabrication)
 ---
 
 ## How OpenVCAD Works
@@ -143,10 +147,21 @@ If you use OpenVCAD in your research, please cite:
 ```
 
 ```bibtex
-@article{wade2025gradedtoolpath,
-  title={Implicit Toolpath Generation for Functionally Graded Additive Manufacturing via Gradient-Aware Slicing},
-  author={Wade, Charles and Beck, Devon and MacCurdy, Robert},
-  journal={arXiv preprint arXiv:2505.08093},
-  year={2025}
+@article{wade2025toolpaths,
+  title = {Implicit Toolpath Generation for Functionally Graded Additive Manufacturing via Gradient-Aware Slicing},
+  author = {Wade, Charles and Beck, Devon and MacCurdy, Robert},
+  journal = {Additive Manufacturing},
+  year = {2025},
+  doi = {https://doi.org/10.1016/j.addma.2025.104963},
+}
+```
+
+```bibtex
+@article{wade2025pyvcad,
+  title = {Implicit Modeling for 3D-printed Multi-material Computational Object Design via Python},
+  author = {Wade, Charles and Beck, Devon and MacCurdy, Robert},
+  journal = {Proceedings of the 10th ACM Symposium on Computational Fabrication},
+  year = {2025},
+  doi = {https://doi.org/10.48550/arXiv.2509.15562},
 }
 ```
