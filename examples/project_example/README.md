@@ -72,12 +72,11 @@ This will:
 - Open a render preview window by calling `Render()`. This allows for interactive viewing, screenshots, and switching between iso-surface and volumetric modes. The window will block further code until it is closed.
 - Next, call `Export()` which opens a UI wizard to select the export format and options. 
 
-## Troubleshooting
-- Ensure the virtual environment is active.
-- Confirm Python version is supported and pip is up-to-date.
-- Verify all packages are installed correctly.
-- Double-check the script filename (`main.py`).
+## Next Steps
+Read our [Getting Started Guide](https://github.com/MacCurdyLab/OpenVCAD-Public/wiki/Getting-Started-with-OpenVCAD) on the Wiki.
+
+Check out our [examples](https://github.com/MacCurdyLab/OpenVCAD-Public/tree/main/examples).
 
 ## Resources
-- [OpenVCAD Python Docs](https://matterassembly.org/pyvcad)
+- [`pyvcad` Docs](https://matterassembly.org/pyvcad)
 - [OpenVCAD Website](https://matterassembly.org/openvcad)
