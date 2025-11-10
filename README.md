@@ -39,6 +39,8 @@ Here are a few examples of what OpenVCAD can produce:
 
 See our [starter project](https://github.com/MacCurdyLab/OpenVCAD-Public/tree/main/examples/project_example) for more information on installing OpenVCAD.
 
+Also check out our [examples](https://github.com/MacCurdyLab/OpenVCAD-Public/tree/main/examples).
+
 ---
 
 ## Publications
