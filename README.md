@@ -17,7 +17,7 @@ With OpenVCAD, you can:
 
 ---
 
-## 🖼 Gallery
+## Gallery
 
 Here are a few examples of what OpenVCAD can produce:
 
@@ -35,7 +35,13 @@ Here are a few examples of what OpenVCAD can produce:
 
 ---
 
-## 📚 Publications
+## Getting Started
+
+See our [starter project](https://github.com/MacCurdyLab/OpenVCAD-Public/tree/main/examples/project_example) for more information on installing OpenVCAD.
+
+---
+
+## Publications
 
 OpenVCAD is an active research project developed by the [Matter Assembly Computation Lab](https://www.colorado.edu/lab/matterassembly/) at CU Boulder. 
 1. **OpenVCAD: An open‑source volumetric multi‑material geometry compiler** (2024)  
@@ -93,29 +99,7 @@ OpenVCAD is **not** a voxel-by-voxel design tool. While it can emit voxel data, 
 
 ---
 
-## 🛠 Installation
-OpenVCAD can be used in two main ways:
-
-### 1. **OpenVCAD Studio** (GUI IDE)
-> [Read our install guide](https://github.com/MacCurdyLab/OpenVCAD-Public/wiki/Installing-OpenVCAD-Studio)
-- A standalone IDE for creating, previewing, and exporting designs with `pyvcad`.
-- Ships with `pyvcad` built-in — no separate Python install needed.
-- Available for **Windows** and **macOS (Apple Silicon)**.
-- Download the latest release from the [Releases page](https://github.com/MacCurdyLab/OpenVCAD-Public/releases).
-
-### 2. **pyvcad** (Python library)
-> For advanced users
-- Python bindings to the OpenVCAD C++ kernel.
-- Installable via PyPI:
-  ```bash
-  pip install OpenVCAD
-  ```
-- Best for algorithmic workflows, integration with simulation, or headless rendering.
-- Runs on Windows and macOS.
-
----
-
-## 📥 Getting the Code
+## Getting the Code
 
 The OpenVCAD source code is open-source under a **non-commercial license**.  
 You can request access to the private GitHub repository here:
@@ -124,14 +108,14 @@ You can request access to the private GitHub repository here:
 
 ---
 
-## 📄 License
+## License
 
 OpenVCAD is released under a **non-commercial open-source license**.  
 See the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🗣 Citing OpenVCAD
+## Citing OpenVCAD
 If you use OpenVCAD in your research, please cite:
 
 ```bibtex
