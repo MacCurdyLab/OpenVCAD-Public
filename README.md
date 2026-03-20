@@ -70,4 +70,24 @@ If you use OpenVCAD in your research, please cite:
 }
 ```
 
+```bibtex
+@article{wade2025toolpaths,
+  title = {Implicit Toolpath Generation for Functionally Graded Additive Manufacturing via Gradient-Aware Slicing},
+  author = {Wade, Charles and Beck, Devon and MacCurdy, Robert},
+  journal = {Additive Manufacturing},
+  year = {2025},
+  doi = {https://doi.org/10.1016/j.addma.2025.104963},
+}
+```
+
+```bibtex
+@article{wade2025pyvcad,
+  title = {Implicit Modeling for 3D-printed Multi-material Computational Object Design via Python},
+  author = {Wade, Charles and Beck, Devon and MacCurdy, Robert},
+  journal = {Proceedings of the 10th ACM Symposium on Computational Fabrication},
+  year = {2025},
+  doi = {https://doi.org/10.48550/arXiv.2509.15562},
+}
+```
+
 See the [full list of publications](https://matterassembly.org/OpenVCAD-Docs/v2/papers/) for additional citations.
