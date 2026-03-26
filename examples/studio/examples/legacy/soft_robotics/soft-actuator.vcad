@@ -1,0 +1,10 @@
+// A function that defines a periodic geometry used for a soft actuator. A bounding box
+// is applied to bound the function.
+union()
+{
+	intersection()
+	{
+		rectprism((3.75, 3.75, 10), "green");
+		function((-3.75, -3.75, -5.25), (3.75, 3.75, 5.25), "2.8 * sqrt(x^2 + y^2) + sin(4 * z) - sin(2.8 * sqrt(x^2 + y^2) + 3.2) - 0.2 - 3.3", "green");
+	}
+}

@@ -1,0 +1,21 @@
+// NOTE: Under the "Material File" drop-down make sure to select configs/vtp.json
+// You can edit this file with a text editor to set v_star and h_start pair
+// You can then "blend" between these states.
+// Here is an example:
+//      state_a: v_star=3.5 and h_star=0.15
+//      state_b: v_star=10.0 and h_star=0.15
+//  If we make a 50%/50% "mixture" of these states we will get:
+//      v_star=0.5*3.5 + 0.5*10 = 6.75
+//      h_star=0.5*0.15 + 0.5*0.15 = 0.15
+// Note: both v_star and h_star CAN be different between states.
+// When you define your states in the material file, you also need to make
+// them different colors to visualize them properly.
+union()
+{
+    translate(-20,0,0){
+        rectprism((40,40,40), "state_a");
+    }
+    translate(20,0,0){
+        rectprism((40,40,40), "state_b");
+    }
+}

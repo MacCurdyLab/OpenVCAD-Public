@@ -1,0 +1,8 @@
+// A two material dogbone tensile test
+union()
+{
+	fgrade(["(x < 1) and (x > -1)", "0.5"],["blue","red"],"thresh")
+	{
+		mesh("examples/data/3d_models/dogbone.stl","red");
+	}
+}

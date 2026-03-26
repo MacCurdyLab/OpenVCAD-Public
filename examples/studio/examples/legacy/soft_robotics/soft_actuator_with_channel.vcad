@@ -1,0 +1,24 @@
+// A function that defines a periodic geometry used for a soft actuator. A bounding box
+// is applied to bound the function. A scale from the the same geometry is then used to
+// grade a channel through the object. Play with the "3.5" constant on the fgrade() to
+// see how the scalar changes the end result. Note, you could also change the "red"
+// material to "void" to hollow out instead. 
+union()
+{
+	// Change the constants at the front of the f-grade to change channel size:
+	// 3.5 = good channel  size
+	// 4.5 = partial channel 
+    // 5.5 = zig-zag core
+	// 8.5 = single cylinder core
+	fgrade(["(3.5 * sqrt(x^2 + y^2) + sin(4 * z) - sin(2.8 * sqrt(x^2 + y^2) + 3.2) - 0.2 - 3.3 <= 0) ? 1 : 0", 
+            "(3.5 * sqrt(x^2 + y^2) + sin(4 * z) - sin(2.8 * sqrt(x^2 + y^2) + 3.2) - 0.2 - 3.3 > 0)  ? 1 : 0"], ["red", "blue"], 
+            "thresh")
+	{
+		intersection()
+		{
+			rectprism((3.75, 3.75, 10), "green");
+			// Note the geometry and f-grade only differ by a constant
+			function((-3.75, -3.75, -5.25), (3.75, 0, 5.25), "2.8 * sqrt(x^2 + y^2) + sin(4 * z) - sin(2.8 * sqrt(x^2 + y^2) + 3.2) - 0.2 - 3.3", "green");
+		}
+	}
+}

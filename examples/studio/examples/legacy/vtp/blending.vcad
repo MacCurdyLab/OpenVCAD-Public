@@ -1,0 +1,14 @@
+// NOTE: Under the "Material File" drop-down make sure to select configs/vtp.json
+union()
+{
+    blend(10,10,10){
+        union(){
+            translate(-20,0,0){
+                rectprism((40,40,40), "state_a");
+            }
+            translate(20,0,0){
+                rectprism((40,40,40), "state_b");
+            }
+        }
+    }
+}

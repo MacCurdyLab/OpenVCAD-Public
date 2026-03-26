@@ -1,0 +1,7 @@
+// This example is intended to be a coupon for a compression test. It is a single cylinder
+// with two materials blended together. This specific file is for the single material
+// control version. See other files in this folder for f-grade and non-blended versions.
+union()
+{
+	mesh("examples/data/3d_models/cylinder.stl", "red");
+}

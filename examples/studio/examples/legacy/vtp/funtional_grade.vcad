@@ -1,0 +1,11 @@
+// NOTE: Under the "Material File" drop-down make sure to select configs/vtp.json
+// A multi-material gear defined with a mesh node and functionally graded. "state_a" (red) material
+// graded into the teeth of the gear. Note: this examples makes
+// use of cylindrical coordinates to grade radially (rho is this case).
+union()
+{
+	fgrade(["1 / (1 + exp(-4.5(rho - 4)))", "(-1 / (1 + exp(-4.5(rho - 4)))) + 1"], ["state_a", "state_b"], "prob")
+	{
+    	mesh("examples/data/3d_models/gear.stl", "state_a");
+	}
+}

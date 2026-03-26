@@ -1,6 +1,6 @@
 # pyvcad_project
 
-This directory contains an example project demonstrating how to use the `pyvcad` library in a standalone Python virtual environment. It provides a simple "Hello World" example for creating an object, rendering it, and exporting it using OpenVCAD.  
+This directory contains an example project demonstrating how to use the `pyvcad` library in a standalone Python virtual environment. It provides a simple "Hello World" example for creating an object, rendering it, and exporting it using OpenVCAD.
 
 This is an introductory example, not a comprehensive guide to OpenVCAD.
 
@@ -70,7 +70,7 @@ python main.py
 This will:
 - Create a simple 3D object (rectangular prism with a two material gradient).
 - Open a render preview window by calling `Render()`. This allows for interactive viewing, screenshots, and switching between iso-surface and volumetric modes. The window will block further code until it is closed.
-- Next, call `Export()` which opens a UI wizard to select the export format and options. 
+- Next, call `Export()` which opens a UI wizard to select the export format and options.
 
 ## Next Steps
 Read our [Getting Started Guide](https://github.com/MacCurdyLab/OpenVCAD-Public/wiki/Getting-Started-with-OpenVCAD) on the Wiki.

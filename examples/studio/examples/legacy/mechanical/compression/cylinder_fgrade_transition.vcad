@@ -1,0 +1,11 @@
+// This example is intended to be a coupon for a compression test. It is a single cylinder
+// with two materials blended together. This specific file is for the functional graded
+// version. See other files in this folder for control and non-blended versions.
+union()
+{
+	// A sigmoid function is used to cross-blend the materials
+	fgrade(["(z/8.4)+0.5", "-(z/8.4)+0.5"],["white", "black"],"prob")
+	{
+		mesh("examples/data/3d_models/cylinder.stl", "blue");
+	}
+}

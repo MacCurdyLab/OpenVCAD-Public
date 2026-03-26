@@ -1,0 +1,13 @@
+union()
+{
+	fgrade(["sin((2 * pi * x) / 4.0) * cos((2 * pi * y) / 4.0) + 
+		     sin((2 * pi * y) / 4.0) * cos((2 * pi * z) / 4.0) + 
+      		 sin((2 * pi * z) / 4.0) * cos((2 * pi * x) / 4.0)", 
+		   "0.5"], ["red","blue"], "prob")
+	{
+		function((-5, -5, -5), (5, 5, 5), 
+                 "sin((2 * pi * x) / 4.0) * cos((2 * pi * y) / 4.0) + 
+				  sin((2 * pi * y) / 4.0) * cos((2 * pi * z) / 4.0) + 
+      			  sin((2 * pi * z) / 4.0) * cos((2 * pi * x) / 4.0)", "red");
+	}
+}

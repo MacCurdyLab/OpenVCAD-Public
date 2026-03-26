@@ -1,0 +1,11 @@
+// This example is intended to be a coupon for a compression test. It is a single cylinder
+// with two materials blended together. This specific file is for the two material version
+// with a hard boundary. See other files in this folder for control and f-grade versions.
+union()
+{
+	// Switch materials abruptly at the center of the part
+	fgrade(["z < 0", "z > 0"], ["red","blue"], "thresh")
+	{
+		mesh("examples/data/3d_models/cylinder.stl", "red");
+	}
+}

@@ -1,0 +1,8 @@
+// A multi-material functionally graded soft-robotic actuator. This uses threshold mode to achieve hard material transitions.
+union()
+{
+    fgrade(["0.2", "sin(4.5 * z + 1.57) - 0.1", "100 * (sin(atan(50 * sin(4.5 * z - 1.57) - 60)) + 1) - rho * sin(phic) + 0.1"],["blue","cyan","yellow"], "thresh")
+    {
+        function((-2, -2, -3.1415), (2, 2, 3.1415), "(0.5 * (rho * sin(phic) - 0.5)^4 + (rho * sin(phic + 0.5 * pi))^4 + 0.5 * (sin(atan(100 * sin(4.5 * z - 1.57) - 60)) + 1) * (sin(atan(20 * sin(phic))) + 1) - 1)", "red");
+    }
+}

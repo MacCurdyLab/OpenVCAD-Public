@@ -1,0 +1,7 @@
+union()
+{
+    fgrade(["(-x/800)+0.9", "(x/800)+0.1"],["red", "liquid"],"prob")
+    {
+        rectprism((160,20,8),"red");
+    }
+}
