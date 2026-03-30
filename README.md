@@ -31,7 +31,7 @@ viz.Render(root, materials)
 
 | | |
 |---|---|
-| **Documentation** | [matterassembly.org/OpenVCAD-Docs/v2/]([https://matterassembly.org/OpenVCAD-Docs/](https://matterassembly.org/OpenVCAD-Docs/v2/)) |
+| **Documentation** | [matterassembly.org/OpenVCAD-Docs/v2/](https://matterassembly.org/OpenVCAD-Docs/v2/) |
 | **Project Website** | [matterassembly.org/openvcad](https://matterassembly.org/openvcad) |
 | **Examples** | [`examples/`](examples/) in this repo |
 | **Bug Reports** | [Issues](https://github.com/MacCurdyLab/OpenVCAD-Public/issues) |
