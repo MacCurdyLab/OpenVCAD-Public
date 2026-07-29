@@ -17,20 +17,23 @@ high_material = materials.id("white")
 # 10-layer export when voxel_size.z is 1 mm.
 bar = pv.RectPrism(
     pv.Vec3(0.0, 0.0, 5.0),
-    pv.Vec3(40.0, 20.0, 10.0),
-    low_material
+    pv.Vec3(40.0, 20.0, 10.0)
 )
 
 # Apply a two-material functional grade along X.
-# At x = -20 mm the object is 100% red.
+# At x = -20 mm the object is 100% black.
 # At x =   0 mm the object is a 50/50 mix.
-# At x =  20 mm the object is 100% blue.
-root = pv.FGrade(
-    ["0.5 - x / 40.0", "0.5 + x / 40.0"],
-    [low_material, high_material],
-    True,
-    bar
+# At x =  20 mm the object is 100% white.
+bar.set_attribute(
+    pv.DefaultAttributes.VOLUME_FRACTIONS,
+    pv.VolumeFractionsAttribute(
+        [
+            ("0.5 - x / 40.0", low_material),
+            ("0.5 + x / 40.0", high_material),
+        ]
+    ),
 )
+root = bar
 
 # Configure the grayscale compiler.
 # voxel_size controls the sampling pitch of the volumetric export.

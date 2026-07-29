@@ -24,16 +24,16 @@ project_path = '../data/3d_models/unit_cells/'
 mesh_path = project_path + "diamond_tpms.3mf"
 
 if use_strut_lattice:
-    # Create a lattice and fille a rect prism with it
-    cell = pv.GraphLattice(unit_cell_type, unit_cell_size, strut_diameter, red)
+    # Create a lattice and fill a rect prism with it
+    cell = pv.GraphLattice(unit_cell_type, unit_cell_size, strut_diameter)
     lattice_fill = pv.Tile(cell)
-    bar = pv.RectPrism(pv.Vec3(0,0,0), box_dims, red)
-    filled_bar = pv.Intersection(False, [lattice_fill, bar])
+    bar = pv.RectPrism(pv.Vec3(0,0,0), box_dims)
+    filled_bar = pv.BBoxIntersection([lattice_fill, bar])
 else:
-    filled_bar = pv.Mesh(mesh_path, red)
+    filled_bar = pv.Mesh(mesh_path)
 
 text_bar = pv.RectPrism(pv.Vec3(-box_dims.x/2 - 2,0,0), pv.Vec3(5, box_dims.y, box_dims.z))
-union = pv.Union(False, [filled_bar, text_bar])
+union = pv.Union(filled_bar, text_bar)
 
 a = box_dims.x
 h_left = 0.55   # hard at x = -a/2
@@ -50,12 +50,14 @@ hard_expr   = f"min(max(({h_left})*(1 - {tL}), 0), 1)"
 soft_expr   = f"min(max(({s_left}) + (1 - ({s_left}))*{tL} - ({l_max})*{tR}, 0), 1)"
 liquid_expr = f"min(max(({l_max})*{tR}, 0), 1)"
 
-fgrade = pv.FGrade(
-    [hard_expr, soft_expr, liquid_expr],
-    [red, blue, liquid],
-    False
+union.set_attribute(
+    pv.DefaultAttributes.VOLUME_FRACTIONS,
+    pv.VolumeFractionsAttribute([
+        (hard_expr, red),
+        (soft_expr, blue),
+        (liquid_expr, liquid),
+    ])
 )
-fgrade.set_child(union)
 
 # Text
 text_height = 3.65
@@ -64,20 +66,25 @@ font = "Arial"
 font_aspect = pv.FontAspect.Bold
 horizontal_alignment = pv.HorizontalAlignment.Center # Left, Center, Right
 vertical_alignment = pv.VerticalAlignment.Center # Bottom, Center, Top
-vcad_text_text = pv.Text("OpenVCAD", text_height, text_depth, green, font_aspect, font, horizontal_alignment, vertical_alignment)
-vcad_text_rotate = pv.Rotate(0,0,-90, pv.Vec3(0,0,0), vcad_text_text)
+text_vfa = pv.VolumeFractionsAttribute([("1.0", green)])
+
+vcad_text_text = pv.Text("OpenVCAD", text_height, text_depth, font_aspect, font, horizontal_alignment, vertical_alignment)
+vcad_text_text.set_attribute(pv.DefaultAttributes.VOLUME_FRACTIONS, text_vfa)
+vcad_text_rotate = pv.Rotate(0,0,-90, vcad_text_text)
 vcad_text_translate = pv.Translate(-box_dims.x/2 - 2, 0, box_dims.z/4+2.0135, vcad_text_rotate)
 
-maclab_text = pv.Text("MatterAssembly.org/\nOpenVCAD", 1.9, text_depth, green, font_aspect, font, horizontal_alignment, vertical_alignment)
-maclab_text_rotate = pv.Rotate(180,0,-90, pv.Vec3(0,0,0), maclab_text)
+maclab_text = pv.Text("MatterAssembly.org/\nOpenVCAD", 1.9, text_depth, font_aspect, font, horizontal_alignment, vertical_alignment)
+maclab_text.set_attribute(pv.DefaultAttributes.VOLUME_FRACTIONS, text_vfa)
+maclab_text_rotate = pv.Rotate(180,0,-90, maclab_text)
 maclab_text_translate = pv.Translate(-box_dims.x/2 - 2, 0, -box_dims.z/4-2.0135, maclab_text_rotate)
 
-unit_cell_text = pv.Text(f"{unit_cell_title_text}:\n{unit_cell_text}", 3.65, 1, green, font_aspect, font, horizontal_alignment, vertical_alignment)
-unit_cell_text_rotate = pv.Rotate(90,90,0, pv.Vec3(0,0,0), unit_cell_text)
+unit_cell_text = pv.Text(f"{unit_cell_title_text}:\n{unit_cell_text}", 3.65, 1, font_aspect, font, horizontal_alignment, vertical_alignment)
+unit_cell_text.set_attribute(pv.DefaultAttributes.VOLUME_FRACTIONS, text_vfa)
+unit_cell_text_rotate = pv.Rotate(90,90,0, unit_cell_text)
 unit_cell_text_translate = pv.Translate(-box_dims.x/2 - 4, 0, 0, unit_cell_text_rotate)
 
 # Composite Object
-union_b = pv.Union(False, [unit_cell_text_translate, maclab_text_translate, vcad_text_translate, fgrade])
+union_b = pv.BBoxUnion([unit_cell_text_translate, maclab_text_translate, vcad_text_translate, union])
 root = union_b
 
 viz.Render(root, materials)

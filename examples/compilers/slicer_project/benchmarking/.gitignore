@@ -1,0 +1,7 @@
+output/
+plots/
+benchmarking.csv
+benchmarking.csv.lock
+prusaslicer_benchmarking.csv
+prusaslicer_benchmarking.csv.lock
+.DS_Store

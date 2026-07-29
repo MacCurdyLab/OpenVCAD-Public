@@ -39,7 +39,7 @@ def build_union_cluster(center_x, material_id, smooth_k, union_kind):
             cluster = pv.BBoxUnion()
     else:
         if smooth_k > 0.0:
-            cluster = pv.Union(smooth_k, False)
+            cluster = pv.Union(smooth_k)
         else:
             cluster = pv.Union()
 
@@ -53,10 +53,14 @@ def build_union_cluster(center_x, material_id, smooth_k, union_kind):
             y = (row - (ROWS - 1) / 2.0) * Y_SPACING
             z = math.sin(col * 0.55) * 0.9 + math.cos(row * 0.85) * 0.6
 
-            sphere = pv.Sphere(pv.Vec3(x, y, z), SPHERE_RADIUS, material_id)
+            sphere = pv.Sphere(pv.Vec3(x, y, z), SPHERE_RADIUS)
             cluster.add_child(sphere)
             positions[(row, col)] = (x, y, z)
 
+    cluster.set_attribute(
+        pv.DefaultAttributes.VOLUME_FRACTIONS,
+        pv.VolumeFractionsAttribute([(1.0, material_id)]),
+    )
     return cluster, positions
 
 
@@ -95,7 +99,7 @@ def build_scene():
     smooth_union, smooth_union_positions = build_union_cluster(
         +SCENE_OFFSET, materials.id("green"), SMOOTH_K, "union"
     )
-    root = pv.Union(False, [sharp_bbox_union, smooth_bbox_union, smooth_union])
+    root = pv.Union(0.0, [sharp_bbox_union, smooth_bbox_union, smooth_union])
 
     return (
         root,
@@ -116,6 +120,7 @@ def build_scene():
     smooth_positions,
     smooth_union_positions,
 ) = build_scene()
+root.prepare(pv.Vec3(0.25, 0.25, 0.25), 1.0)
 
 print("BBoxUnion comparison demo")
 print("  left cluster  : sharp BBoxUnion")

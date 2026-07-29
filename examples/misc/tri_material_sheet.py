@@ -9,35 +9,37 @@ def create_color_calibration_sheet(
         count_y,
         thickness,
         colors
-) -> pv.Node:
+):
     # center the whole sheet around the origin
     total_width  = swatch_size * count_x
     total_height = swatch_size * count_y
 
-    union = pv.Union()
+    union = pv.BBoxUnion()
 
     for i in range(count_x):
         for j in range(count_y):
             # compute volume fractions
             c_frac = i / (count_x - 1) if count_x > 1 else 0
             m_frac = j / (count_y - 1) if count_y > 1 else 0
-            w_frac = 1.0 - (c_frac + m_frac)
-            fractions = [f"{c_frac:.3f}", f"{m_frac:.3f}", f"{w_frac:.3f}"]
+            w_frac = max(0.0, 1.0 - (c_frac + m_frac))
+            total_frac = c_frac + m_frac + w_frac
+            fractions = [
+                (f"{c_frac / total_frac:.6f}", colors[0]),
+                (f"{m_frac / total_frac:.6f}", colors[1]),
+                (f"{w_frac / total_frac:.6f}", colors[2]),
+            ]
 
             # compute the center of this swatch
             x_pos = -total_width/2 + swatch_size/2 + i * swatch_size
             y_pos = -total_height/2 + swatch_size/2 + j * swatch_size
             center = pv.Vec3(x_pos, y_pos, 0)
 
-            base = pv.RectPrism(center, pv.Vec3(swatch_size, swatch_size, thickness), W)
-            graded = pv.FGrade(
-                fractions,
-                [colors[0], colors[1], colors[2]],
-                True,
-                base
+            swatch = pv.RectPrism(center, pv.Vec3(swatch_size, swatch_size, thickness))
+            swatch.set_attribute(
+                pv.DefaultAttributes.VOLUME_FRACTIONS,
+                pv.VolumeFractionsAttribute(fractions)
             )
-
-            union.add_child(graded)
+            union.add_child(swatch)
 
     return union
 
