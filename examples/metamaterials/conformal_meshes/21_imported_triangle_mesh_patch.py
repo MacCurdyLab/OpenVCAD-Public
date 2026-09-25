@@ -1,41 +1,27 @@
-"""Import a mesh, extract one face group, and map a lattice onto it.
+"""Import a mesh, select one smooth face group, and map a lattice onto it.
 
 The domed tile is a closed solid with three distinct face groups -- a domed top, four vertical
-sides, and a flat bottom. Selecting the upward-facing triangles isolates the top as a single clean
-disk, which is supplied directly to ``TriangleMeshSurface``. The free-boundary parameterization
+sides, and a flat bottom. Angle-limited linked selection isolates the top as a single clean disk,
+which is converted to ``TriangleMeshSurface``. The free-boundary parameterization
 keeps the patch's real outline and trims the mapped lattice to it, and the wall thickness is
 graded across the patch, so this is the general recipe for driving a graded conformal lattice
-from an imported mesh region using only ``SurfaceMesh``'s indexed arrays.
+from an imported mesh region without manually reconstructing indexed arrays.
 """
 
-import sys
 from pathlib import Path
 
 import pyvcad as pv
 import pyvcad_metamaterials as mm
 import pyvcad_rendering as viz
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from _triangle_surface_examples import (
-    largest_connected_component,
-    reindex,
-    select_triangles,
-)
-
-# Import the closed solid and work directly with its indexed vertices and triangles.
+# Import the closed solid and choose the domed top from a geometric seed point.
 tile_path = Path(__file__).resolve().parents[2] / "data" / "3d_models" / "domed_tile.stl"
 tile = pv.SurfaceMesh(str(tile_path), disable_validation=True)
-vertices = tile.vertices
-triangles = tile.triangles
-
-# Extract the upward-facing top face group, keep its largest connected patch, and reindex it into a
-# standalone disk mesh.
-top = select_triangles(vertices, triangles, lambda nx, ny, nz: nz > 0.5)
-top = largest_connected_component(top)
-patch_vertices, patch_triangles = reindex(vertices, top)
+seed = tile.nearest_triangle(pv.Vec3(0, 0, 100))
+top = tile.select_linked_by_face_angle(seed.triangle_id, max_angle_degrees=30.0)
 
 # Turn the extracted top into the open surface that will guide the lattice.
-surface = pv.TriangleMeshSurface(patch_vertices, patch_triangles)
+surface = top.to_triangle_mesh_surface(u_axis_hint=pv.Vec3(1, 0, 0))
 # Build a single cell layer that follows the domed top.
 cell_map = mm.cell_map_from_surface(
     surface,

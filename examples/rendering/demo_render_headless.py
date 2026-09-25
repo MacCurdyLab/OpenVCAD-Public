@@ -19,6 +19,8 @@ if __name__ == "__main__":
         "scale_bar_palette": "auto",         # Auto per-attribute, or override: viridis/plasma/inferno/magma/cividis/turbo/grayscale
         "use_blending": True,                # Toggle volume blending
         "use_vol_shading": False,            # Volumetric shading (if render_mode is volumetric)
+        "volume_gloss": True,                # Glossy surface shell over volumes (if render_mode is volumetric)
+        "volume_glossiness": 0.25,            # Surface finish: 0 matte (frosted) to 1 polished
         "show_bbox": False,                  # Show bounding box
         "show_origin": False,                # Show origin axes
         "show_orientation_marker": False,    # Still image output always hides the axis widget

@@ -1,0 +1,15 @@
+name: openvcad-fenicsx
+channels:
+  - conda-forge
+dependencies:
+  - python=3.14.3
+  - fenics-dolfinx=0.10.0
+  - fenics-basix=0.10.0
+  - fenics-ufl=2025.2.1
+  - petsc=3.24.5
+  - petsc4py=3.24.4
+  - mpi4py=4.1.1
+  - openmpi=5.0.10
+  - h5py=3.16.0
+  - numpy=2.4.3
+  - pip=26.0.1
