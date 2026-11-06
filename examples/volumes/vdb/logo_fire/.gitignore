@@ -1,0 +1,6 @@
+output/
+sweep_animation/
+turntable_animation/
+# Regeneration intermediates (see generate_logo_fire_blender.py)
+logo_v.stl
+bake/

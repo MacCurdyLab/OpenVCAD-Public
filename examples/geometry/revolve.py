@@ -1,26 +1,21 @@
 """
-PolygonRevolve Demo - Revolve a half-profile around an axis.
+Revolve Demo - Spin a 2D Profile about the Z axis.
 
-This example creates a vase-like profile in the XZ plane and revolves it
-270 degrees around the Z axis, leaving a cutaway that shows the profile.
+Revolve reads the profile's x as the distance from the Z axis and its y as
+the height. A full 360 degree revolve closes into a solid of revolution; a
+smaller angle leaves flat caps, which is handy for showing a cross-section.
+(PolygonRevolve does the same from a list of 3D points and any axis.)
 """
 import pyvcad as pv
 import pyvcad_rendering as viz
 
-# The closing edge from the last point back to the first lies on the axis.
-# PolygonRevolve treats that as the revolve centerline, not as a surface seam.
-profile = [
-    pv.Vec3(0.0, 0.0, -8.0),
-    pv.Vec3(7.0, 0.0, -8.0),
-    pv.Vec3(10.0, 0.0, -2.0),
-    pv.Vec3(6.0, 0.0, 6.0),
-    pv.Vec3(0.0, 0.0, 6.0),
-]
+# Half-section of a cup: the edge on x=0 lies on the axis and fills the base.
+cup_profile = pv.Profile.polygon([(0, 0), (12, 0), (15, 20), (13.5, 20), (10.5, 2), (0, 2)])
+cup = pv.Revolve(cup_profile)
 
-axis_start = pv.Vec3(0.0, 0.0, -8.0)
-axis_end = pv.Vec3(0.0, 0.0, 6.0)
-sweep_degrees = 270.0
+# The same profile swept only 270 degrees, so the wall section is visible.
+cutaway = pv.Revolve(cup_profile, 270.0)
 
-root = pv.PolygonRevolve(profile, axis_start, axis_end, sweep_degrees)
+root = pv.Union(cup, pv.Translate(40.0, 0.0, 0.0, cutaway))
 
 viz.Render(root)

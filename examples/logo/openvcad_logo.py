@@ -13,11 +13,19 @@ Each layer is a single implicit Function: the V centreline is two circular arcs
 the bottom, and the ribbon is a rounded rectangle swept along that path. Using
 exact circle distances keeps the bottom a true round and the arms free of any
 mitre seam.
+
+``add_text`` sets the logo in a block of clear resin with "OpenVCAD" lettering
+floating under the V, carrying the same colour sweep as the front layer.
 """
 import math
 
 import pyvcad as pv
 import pyvcad_rendering as viz
+
+add_text = False         # True sets the logo in a clear block with "OpenVCAD" lettering under the V
+clear_margin = 4.0       # clear resin between the logo/lettering and every face of the block
+text_height = 11.0       # font size of the lettering
+text_gap = 4.0           # space between the bottom of the V and the lettering
 
 tip_y = 30.0
 bottom_y = -22.0
@@ -129,5 +137,29 @@ for i in range(layers):
     layer.set_attribute(pv.DefaultAttributes.COLOR_RGBA,
                         sweep(-span_i, span_i, toward(left_color, back_tone, f), toward(mid_color, back_tone, f), toward(right_color, back_tone, f)))
     root.add_child(layer)
+
+if add_text:
+    # The layer Functions carry loose bounds, so take the stack's extents from its parameters
+    logo_min = pv.Vec3(-half_span - ribbon_width / 2, bottom_y - ribbon_width / 2,
+                       -(layers - 1) * layer_spacing - ribbon_thickness / 2)
+    logo_max = pv.Vec3(half_span + ribbon_width / 2, tip_y + ribbon_width / 2, ribbon_thickness / 2)
+
+    # Lettering carries the front layer's sweep and sits at the stack's mid depth under the V.
+    # Text lays its glyphs out turned 180 degrees in XY; turn them back so they read upright with +Y up.
+    label = pv.Rotate(0, 0, 180, pv.Text("OpenVCAD", text_height, ribbon_thickness, aspect=pv.FontAspect.Bold, font="Arial"))
+    label.prepare(pv.Vec3(0.1, 0.1, 0.1), 0.5)
+    label_min, label_max = label.bounding_box()
+    label = pv.Translate(-(label_min.x + label_max.x) / 2, logo_min.y - text_gap - label_max.y,
+                         (logo_min.z + logo_max.z) / 2, label)
+    half_width = (label_max.x - label_min.x) / 2
+    label.set_attribute(pv.DefaultAttributes.COLOR_RGBA, sweep(-half_width, half_width, left_color, mid_color, right_color))
+
+    # Clear resin around both, with clear_margin on every face
+    block_min_y = logo_min.y - text_gap - (label_max.y - label_min.y) - clear_margin
+    block = pv.RectPrism.FromMinAndMax(
+        pv.Vec3(min(logo_min.x, -half_width) - clear_margin, block_min_y, logo_min.z - clear_margin),
+        pv.Vec3(max(logo_max.x, half_width) + clear_margin, logo_max.y + clear_margin, logo_max.z + clear_margin))
+    block.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute("0", "0", "0", "0"))
+    root = pv.Union(0.0, [root, label, block])  # the logo and lettering come first so their colours win
 
 viz.Render(root)

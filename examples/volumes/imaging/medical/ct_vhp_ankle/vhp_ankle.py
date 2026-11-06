@@ -13,7 +13,9 @@ render = False
 # "volume_fractions" mode, they come from the direct HU material mapping.
 export_material_inkjet = True
 export_visual = False
-use_grayscale_color_palette = True
+# Visual (ColorInkjetCompiler) palette: "warm", "grayscale" or "xray". "xray" prints the
+# HU field as sparse black ink in clear resin so a top-down (Z) view reads like a radiograph.
+color_palette = "xray"
 voxel_size = pv.Vec3(0.0423,0.0846,0.027)
 liquid_keepout = 1.5 # mm
 dicom_path = "dicom_ankle/"
@@ -39,7 +41,7 @@ MOUNTING_BAR_CROSS_SECTION_RATIO = 0.05
 # decimal point to keep the size label filename-friendly (for example, x45p5mm).
 foot_x_length_slug = "{:g}".format(FOOT_X_LENGTH).replace(".", "p")
 material_output_dir = "output/ankle_material_x{}mm/".format(foot_x_length_slug)
-visual_output_dir = "output/ankle_visual_x{}mm/".format(foot_x_length_slug)
+visual_output_dir = "output/ankle_visual_{}_x{}mm/".format(color_palette, foot_x_length_slug)
 
 # One-time histogram analysis of DICOM voxels enclosed by ankle.obj found
 # these rounded 5th and 99th percentile cutoffs. They give the soft tissue and
@@ -109,7 +111,45 @@ grayscale_hu_color_map = [
     pv.LookupTableEntry(3000,  pv.Vec4(1.00, 1.00, 1.00, 0.780)),
 ]
 
-hu_color_map = grayscale_hu_color_map if use_grayscale_color_palette else warm_hu_color_map
+# Radiograph look: every voxel is black ink or clear, and HU only sets how much black. Black
+# accumulates over every layer a ray crosses (~300 layers through the foot along Z), so alpha
+# must stay tiny: XRAY_ALPHA_SCALE leaves about two black voxels per column on average, roughly
+# 60% light through the soft tissue and darker over bone. Raise or lower it to darken or lighten
+# the whole print. Bone is weighted well above soft tissue so it stands out of the ink grain.
+XRAY_ALPHA_SCALE = 0.0016
+xray_hu_weights = [
+    (-1024, 0.0),
+    (-500,  0.0),   # air
+    (-200,  0.2),
+    (-100,  0.45),  # fat
+    (0,     0.8),   # water / soft tissue
+    (100,   1.0),
+    (200,   2.0),
+    (400,   4.0),   # cancellous bone
+    (700,   7.0),
+    (1200,  10.0),  # cortical bone
+    (3000,  11.0),
+]
+xray_hu_color_map = [pv.LookupTableEntry(hu, pv.Vec4(0.0, 0.0, 0.0, weight * XRAY_ALPHA_SCALE))
+                     for hu, weight in xray_hu_weights]
+
+hu_color_maps = {"warm": warm_hu_color_map, "grayscale": grayscale_hu_color_map, "xray": xray_hu_color_map}
+if color_palette not in hu_color_maps:
+    raise ValueError("color_palette must be 'warm', 'grayscale' or 'xray'.")
+hu_color_map = hu_color_maps[color_palette]
+
+# The default ICC profile turns pure black into a cyan-heavy rich black and greys into black
+# plus white ink, which clouds a clear print. With colour management off, black maps straight
+# to the K channel, keeping the xray palette neutral and see-through.
+# The xray alphas leave about two black voxels per column, and at that density 3D dithering drags
+# them into streaks along the scan rows; independent stochastic placement keeps the bone detail.
+visual_export_mode = pvc.ColorInkjetExportMode.STOCHASTIC
+visual_pipeline_options = pvc.ColorPipelineOptions()
+if color_palette == "xray":
+    visual_pipeline_options.first_gamma_enabled = False
+    visual_pipeline_options.icc_profile_enabled = False
+    visual_pipeline_options.second_gamma_enabled = False
+    visual_pipeline_options.affinity_blend_enabled = False
 
 # Load DICOM series
 dicom_loader = pv.DICOMLoader(dicom_path)
@@ -274,5 +314,6 @@ if export_material_inkjet or export_visual:
         compile_output(compiler, material_output_dir, "Material Inkjet")
 
     if export_visual:
-        compiler = pvc.ColorInkjetCompiler(object, voxel_size, visual_output_dir, prefix)
+        compiler = pvc.ColorInkjetCompiler(object, voxel_size, visual_output_dir, prefix, "default",
+                                           visual_export_mode, visual_pipeline_options)
         compile_output(compiler, visual_output_dir, "Visual")

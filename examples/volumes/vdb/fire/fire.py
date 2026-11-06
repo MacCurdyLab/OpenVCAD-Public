@@ -8,13 +8,19 @@ export = False
 animate = False
 use_cylinder = False
 cylinder_radius_padding = 7.0
+add_text = False         # True extends the block below the fire and floats "OpenVCAD" lettering there
+text_height = 6.5        # font size of the lettering (grid units, scaled with the fire)
+text_depth = 2.0         # lettering thickness along the viewing axis
+text_gap = 2.0           # clear resin between the base of the fire and the lettering
+text_margin = 2.0        # clear resin below the lettering
+text_color = (0.1, 0.1, 0.1)  # the dark smoke tone
 voxel_size = pv.Vec3(0.0423,0.0846,0.027)
 scale = 1.12
 max_transparency = 0.8
 
 path = "fire.vdb"
-prefix = "fire_"
-output_dir = f"output/fire_scale_{round(scale*100)}_trans_{round(max_transparency*100)}/"
+prefix = "fire_text_" if add_text else "fire_"
+output_dir = f"output/{prefix}scale_{round(scale*100)}_trans_{round(max_transparency*100)}/"
 
 # Load VDB volumes
 density_volume = pv.vdb_loader.load_float_volume(path, "density")
@@ -36,8 +42,27 @@ if use_cylinder:
     object = pv.Cylinder(center, radius, height)
     object = pv.Rotate(90,0,0, object) # Rotate to align volume
     object = pv.BBoxUnion([object])
+elif add_text:
+    # Lettering under the base of the fire, reading across the grid's depth and facing -X, so it faces
+    # up Z once the export lays the fire down for printing. Text lays its glyphs out turned 180 degrees
+    # in XY; turn them back so they read upright with +Y up, then turn the face from +Z to -X.
+    label = pv.Rotate(0, 0, 180, pv.Text("OpenVCAD", text_height, text_depth, aspect=pv.FontAspect.Bold, font="Arial"))
+    label = pv.Rotate(0, 90, 0, label)
+    label.prepare(voxel_size, 0.5)
+    label_min, label_max = label.bounding_box()
+    label = pv.Translate((volume_bbox_min.x + volume_bbox_max.x) / 2 - (label_min.x + label_max.x) / 2,
+                         volume_bbox_min.y - text_gap - label_max.y,
+                         (volume_bbox_min.z + volume_bbox_max.z) / 2 - (label_min.z + label_max.z) / 2, label)
+    label.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute(*[str(c) for c in text_color], "1.0"))
+    block_min = pv.Vec3(volume_bbox_min.x,
+                        volume_bbox_min.y - text_gap - (label_max.y - label_min.y) - text_margin,
+                        volume_bbox_min.z)
+    object = pv.RectPrism.FromMinAndMax(block_min, volume_bbox_max)
 else:
     object = pv.RectPrism.FromMinAndMax(volume_bbox_min, volume_bbox_max)
+
+if add_text and use_cylinder:
+    raise ValueError("add_text needs the rectangular block; set use_cylinder = False")
 
 # Set attributes
 object.set_attribute(pv.DefaultAttributes.DENSITY, density_attribute)
@@ -164,6 +189,8 @@ mod = pv.LookupTableConverter(
     pv.InterpolationMode.STEP
 )
 root = pv.AttributeModifier(mod, object)
+if add_text:
+    root = pv.Union(0.0, [label, root])  # the lettering comes first so its colour wins inside it
 root = pv.Scale(scale, root)
 
 root = pv.Rotate(-90,0,0, root) # Stand up along the z-axis

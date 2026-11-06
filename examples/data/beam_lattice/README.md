@@ -12,4 +12,4 @@ and renamed to remove spaces. They are redistributed under the
 | `spinal_implant.3mf` | 11821 | `radius=0.25`, `minlength=0.000506664`, `cap=sphere` | A large lattice built alongside a separate solid mesh object in the same build |
 
 These are used by `examples/lattices/beam_lattice/` and by the
-`docs/source/guides/3mf-beam-lattice.md` guide.
+`docs/source/guides/imports/3mf-beam-lattice.md` guide.

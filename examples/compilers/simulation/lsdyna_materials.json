@@ -1,0 +1,24 @@
+{
+    "materials": [
+        {
+            "name": "soft_polymer",
+            "r": 235,
+            "g": 120,
+            "b": 40,
+            "a": 255,
+            "density": 1.1e-9,
+            "modulus": 30.0,
+            "poissons_ratio": 0.45
+        },
+        {
+            "name": "stiff_polymer",
+            "r": 40,
+            "g": 110,
+            "b": 210,
+            "a": 255,
+            "density": 1.2e-9,
+            "modulus": 1500.0,
+            "poissons_ratio": 0.35
+        }
+    ]
+}

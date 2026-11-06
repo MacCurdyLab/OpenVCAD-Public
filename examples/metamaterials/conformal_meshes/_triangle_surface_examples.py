@@ -170,3 +170,78 @@ def reindex(vertices, triangles):
     new_vertices = [vertices[old] for old in used]
     new_triangles = [(remap[a], remap[b], remap[c]) for (a, b, c) in triangles]
     return new_vertices, new_triangles
+
+
+def indexed_holed_grid(block_size, blocks_x, blocks_y, holes, segments, rings, height):
+    """Build an indexed height-field plate with exact circular holes, centered on the origin.
+
+    The plate is a ``blocks_x`` x ``blocks_y`` array of square blocks. A plain block is a
+    ``segments`` x ``segments`` grid; a block listed in ``holes`` is a radial mesh from a circle
+    out to its square border, whose border points match the neighbouring grids, so the blocks
+    merge into one open patch whose inner boundary loops are the holes.
+
+    Arguments:
+      block_size (float): World size of one square block.
+      blocks_x, blocks_y (int): Block counts along X and Y.
+      holes (dict): Maps ``(block_x, block_y)`` to a hole radius smaller than half a block.
+      segments (int): Segments along each block side.
+      rings (int): Radial rings between a hole and its block border.
+      height (callable): ``height(x, y) -> z`` evaluated at each vertex.
+
+    Returns:
+      (vertices, triangles): Indexed arrays with consistent upward-facing winding.
+    """
+    vertices = []
+    triangles = []
+    index_of = {}
+    x0 = -0.5 * block_size * blocks_x
+    y0 = -0.5 * block_size * blocks_y
+
+    def vertex(x, y):
+        key = (round(x * 1e6), round(y * 1e6))
+        if key not in index_of:
+            index_of[key] = len(vertices)
+            vertices.append(pv.Vec3(x, y, float(height(x, y))))
+        return index_of[key]
+
+    half = 0.5 * block_size
+    for by in range(blocks_y):
+        for bx in range(blocks_x):
+            cx = x0 + (bx + 0.5) * block_size
+            cy = y0 + (by + 0.5) * block_size
+            radius = holes.get((bx, by))
+            if radius is None:
+                grid = [[vertex(cx - half + block_size * i / segments, cy - half + block_size * j / segments)
+                         for i in range(segments + 1)] for j in range(segments + 1)]
+                for j in range(segments):
+                    for i in range(segments):
+                        a, b = grid[j][i], grid[j][i + 1]
+                        c, d = grid[j + 1][i + 1], grid[j + 1][i]
+                        triangles.append((a, b, c))
+                        triangles.append((a, c, d))
+                continue
+            border = []
+            for s in range(4 * segments):
+                side, step = divmod(s, segments)
+                t = step / segments
+                offset = ((-half + block_size * t, -half), (half, -half + block_size * t),
+                          (half - block_size * t, half), (-half, half - block_size * t))[side]
+                border.append((cx + offset[0], cy + offset[1]))
+            ring_rows = []
+            for m in range(rings + 1):
+                row = []
+                for sx, sy in border:
+                    length = math.hypot(sx - cx, sy - cy)
+                    px = cx + radius * (sx - cx) / length
+                    py = cy + radius * (sy - cy) / length
+                    f = m / rings
+                    row.append(vertex(sx, sy) if m == rings else vertex(px + f * (sx - px), py + f * (sy - py)))
+                ring_rows.append(row)
+            count = 4 * segments
+            for m in range(rings):
+                for s in range(count):
+                    a, b = ring_rows[m][s], ring_rows[m][(s + 1) % count]
+                    c, d = ring_rows[m + 1][(s + 1) % count], ring_rows[m + 1][s]
+                    triangles.append((a, d, c))
+                    triangles.append((a, c, b))
+    return vertices, triangles
